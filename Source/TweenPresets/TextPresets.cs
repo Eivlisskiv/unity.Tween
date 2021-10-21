@@ -1,9 +1,8 @@
-﻿using IgnitedBox.Tweening;
-using System;
+﻿using System;
 using Tween.Source.Tweeners.FloatTweeners;
 using UnityEngine.UI;
 
-namespace IgnitedBox.TweenPresets
+namespace IgnitedBox.Tweening.TweenPresets
 {
     public static class TextPresets
     {

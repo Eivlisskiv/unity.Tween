@@ -1,9 +1,8 @@
-﻿using IgnitedBox.Tweening;
-using IgnitedBox.Tweening.Tweeners.ColorTweeners;
+﻿using IgnitedBox.Tweening.Tweeners.ColorTweeners;
 using System;
 using UnityEngine;
 
-namespace IgnitedBox.TweenPresets
+namespace IgnitedBox.Tweening.TweenPresets
 {
     public static class GraphicPresets
     {

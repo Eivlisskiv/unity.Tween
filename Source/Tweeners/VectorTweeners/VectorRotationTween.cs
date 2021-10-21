@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace IgnitedBox.Tweening.Tweeners.VectorTweeners
 {
-    class VectorRotationTween : VectorTweener<Transform>
+    public class VectorRotationTween : VectorTweener<Transform>
     {
         public VectorRotationTween() { }
         public VectorRotationTween(Transform element, Vector3 target, float time,

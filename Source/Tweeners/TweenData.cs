@@ -6,7 +6,7 @@ namespace IgnitedBox.Tweening.Tweeners
     public abstract class TweenData<S, T> : TweenerBase
     {
         [SerializeField]
-        private S _element;
+        private readonly S _element;
         public S Element => _element;
 
         [SerializeField]
