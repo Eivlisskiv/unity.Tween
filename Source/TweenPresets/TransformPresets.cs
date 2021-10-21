@@ -1,7 +1,8 @@
-﻿using IgnitedBox.Tweening.Tweeners.VectorTweeners;
+﻿using IgnitedBox.Tweening;
+using IgnitedBox.Tweening.Tweeners.VectorTweeners;
 using UnityEngine;
 
-namespace IgnitedBox.Tweening.TweenPresets
+namespace IgnitedBox.TweenPresets
 {
     public static class TransformPresets
     {
