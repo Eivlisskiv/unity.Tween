@@ -1,8 +1,1 @@
 .git
-.vs
-bin
-obj
-Properties
-*.csproj
-*.user
-*.sln

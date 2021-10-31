@@ -3,6 +3,7 @@ using IgnitedBox.Tweening.Tweeners;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -86,7 +87,15 @@ namespace IgnitedBox.Tweening.Editor
             _tweenTypes = types.Where(t => !t.IsAbstract && !t.IsInterface
                 && t.IsSubclassOf(tweeners)).ToArray();
 
-            return (_tweenNames = _tweenTypes.Select(t => t.Name).ToArray());
+            return (_tweenNames = _tweenTypes.Select(t => ParseName(t.Name)).ToArray());
+        }
+
+        private static string ParseName(string name)
+        {
+            name = name.Replace("Tween", "");
+            name = name.Replace('_', ' ');
+            name = Regex.Replace(name, "([a-z])([A-Z])", "$1 $2");
+            return name;
         }
 
         private bool showTweenList = true;
