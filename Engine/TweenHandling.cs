@@ -13,10 +13,10 @@ namespace IgnitedBox.Tweening
             (_tweenHandler = new GameObject("Tween Handler", 
                 typeof(GlobalTweensContainer)));
 
-        private static GlobalTweensContainer _conatiner;
+        private static GlobalTweensContainer _container;
 
-        public static GlobalTweensContainer Conatiner
-            => _conatiner ? _conatiner : (_conatiner =
+        public static GlobalTweensContainer Container
+            => _container ? _container : (_container =
             TweenHandler.GetComponent<GlobalTweensContainer>());
 
         private static A Construct<T, V, A>(T subject, V target,
@@ -36,7 +36,19 @@ namespace IgnitedBox.Tweening
             return AttachComponentTween<TTweener, TElement, TValue>(component.gameObject,
                 tween, Tweener.BlendType.Replace);
             
-            Conatiner.Add(tween);
+            Container.Add(tween);
+
+            return tween;
+        }
+
+        public static TTweener UnscaledTween<TElement, TValue, TTweener>(this TElement subject, TValue target,
+            float time, float delay = 0, Func<double, double> easing = null,
+            Action callback = null) where TTweener : TweenData<TElement, TValue>
+        {
+            TTweener tween = Tween<TElement, TValue, TTweener>
+                (subject, target, time, delay, easing, callback);
+
+            tween.scaledTime = false;
 
             return tween;
         }

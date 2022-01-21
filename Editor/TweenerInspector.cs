@@ -7,10 +7,10 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace IgnitedBox.Tweening.Editor
+namespace IgnitedBox.Tweening
 {
     [CustomEditor(typeof(Tweener))]
-    public class TweenerInspector : UnityEditor.Editor
+    public class TweenerInspector : Editor
     {
         private static Type[] _tweenTypes;
         private static string[] _tweenNames;
@@ -67,9 +67,7 @@ namespace IgnitedBox.Tweening.Editor
                 AnimationCurve curve = EditorGUILayout.CurveField("Easing",
                 tween.Curve ?? new AnimationCurve());
                 tween.Curve = curve;
-            }
-
-            tween.Curve = null;
+            } else tween.Curve = null;
         }
 
         public class Callback : UnityEngine.Events.UnityEvent { }
@@ -92,8 +90,7 @@ namespace IgnitedBox.Tweening.Editor
 
         private static string ParseName(string name)
         {
-            name = name.Replace("Tween", "");
-            name = name.Replace('_', ' ');
+            name = name.Replace("Tween", "").Replace('_', ' ');
             name = Regex.Replace(name, "([a-z])([A-Z])", "$1 $2");
             return name;
         }

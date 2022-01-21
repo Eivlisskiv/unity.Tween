@@ -1,17 +1,18 @@
-﻿using System;
+﻿using IgnitedBox.Tweening.Components;
+using System;
 using UnityEngine;
 
 namespace IgnitedBox.Tweening.Tweeners
 {
-    public abstract class TweenData<S, T> : TweenerBase
+    public abstract class TweenData<TElement, TTween> : TweenerBase
     {
         [SerializeField]
-        private readonly S _element;
-        public S Element => _element;
+        private TElement _element;
+        public TElement Element => _element;
 
         [SerializeField]
-        private T _start;
-        public T Start 
+        private TTween _start;
+        public TTween Start 
         {
             get => _start;
             set
@@ -21,12 +22,12 @@ namespace IgnitedBox.Tweening.Tweeners
             }
         }
 
-        private T _tween;
-        public T Tween  => _tween;
+        private TTween _tween;
+        public TTween Tween  => _tween;
 
         [SerializeField]
-        private T _target;
-        public T Target 
+        private TTween _target;
+        public TTween Target 
         {
             get => _target;
             set
@@ -38,7 +39,7 @@ namespace IgnitedBox.Tweening.Tweeners
 
         protected TweenData() { }
 
-        protected TweenData(S subject, T target, float time, 
+        protected TweenData(TElement subject, TTween target, float time, 
             float delay, Func<double, double> easing, Action callback)
         {
             _element = subject;
@@ -47,19 +48,19 @@ namespace IgnitedBox.Tweening.Tweeners
             Start = GetStart();
             Duration = time;
             Delay = delay;
+            currentDelay = Delay;
 
             Easing = easing;
             Callback = callback;
         }
 
-        public abstract void Blend(TweenData<S, T> with);
+        public abstract void Blend(TweenData<TElement, TTween> with);
 
-        public abstract T GetTweenAt(float percent);
+        public abstract TTween GetTweenAt(float progress);
 
-        protected abstract T GetStart();
-        protected abstract T GetTween();
-        protected abstract void OnFinish();
-        protected abstract void OnMove(T current);
+        protected abstract TTween GetStart();
+        protected abstract TTween GetTween();
+        protected abstract void OnMove(TTween current);
 
         public override void Update(float time)
         {
@@ -69,7 +70,7 @@ namespace IgnitedBox.Tweening.Tweeners
 
             if(Check(time, out float percent))
             {
-                OnFinish();
+                OnMove(GetTweenAt(PerformEasing(1)));
 
                 Callback?.Invoke();
                 callbackEvent?.Invoke();
@@ -83,7 +84,7 @@ namespace IgnitedBox.Tweening.Tweeners
             return;
         }
 
-        public void SetPositions(T start, T target)
+        public void SetPositions(TTween start, TTween target)
         {
             _start = start;
             _target = target;
@@ -106,15 +107,33 @@ namespace IgnitedBox.Tweening.Tweeners
             return true;
         }
 
+        public void Dispose()
+        {
+            Stop();
+            if(Element is Component unityComponent)
+            {
+                //Component is not available
+                if (!unityComponent) return;
+
+                Tweener tweenComponent = unityComponent.GetComponent<Tweener>();
+
+                tweenComponent.Remove(this);
+
+                return;
+            }
+
+            TweenHandling.Container.Dispose(this);
+        }
+
 #if UNITY_EDITOR
         public override void EditorObjectField()
         {
-            Type type = typeof(S);
+            Type type = typeof(TElement);
             if (type.IsSubclassOf(typeof(UnityEngine.Object)))
             {
                 var obj = UnityEditor.EditorGUILayout.ObjectField(type.Name,
                     Element as UnityEngine.Object, type, true);
-                if (obj is S s) _element = s;
+                if (obj is TElement s) _element = s;
                 return;
             }
 

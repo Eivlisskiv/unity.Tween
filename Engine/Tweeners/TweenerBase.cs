@@ -68,7 +68,7 @@ namespace IgnitedBox.Tweening.Tweeners
 
         public TweenerBase() { }
 
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
         [NonSerialized]
         public bool editorOpen;
         [NonSerialized]
@@ -78,28 +78,42 @@ namespace IgnitedBox.Tweening.Tweeners
             => UnityEditor.EditorGUILayout.LabelField("Element Field not implemented!");
         public virtual void EditorValueFields()
             => UnityEditor.EditorGUILayout.LabelField("Values Fields not implemented!");
-//#endif
+#endif
 
         public abstract void Update(float time);
 
         protected bool ContinueDelay(float time)
-            =>  State == TweenState.Playing && (currentDelay < 0 || (currentDelay -= time) < 0);
+        {
+            if (State != TweenState.Playing) return false;
+            if (Delay <= 0) return true;
+
+            if (currentDelay <= 0) return true;
+            currentDelay -= time;
+            return currentDelay <= 0;
+        }
 
         protected bool Check(float time, out float percent)
         {
             Time += time;
             float x = Time / Duration;
 
-            if(Easing == null && _curve != null)
+            percent = PerformEasing(x);
+            return x >= 1;
+        }
+
+        protected float PerformEasing(float x)
+        {
+            if (Easing == null && _curve != null)
             {
                 Easing = (t) => { return _curve.Evaluate((float)t); };
             }
 
-            percent = Easing == null ? x : (float)Easing(x);
-            return x >= 1;
+            return Easing == null ? x : (float)Easing(x);
         }
 
         public void SetNormalizedTime(double normalizedTime)
             => Time = (float)(Duration * normalizedTime);
+
+        public void Stop() => State = TweenState.Finished;
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace IgnitedBox.Tweening.Tweeners.ColorTweeners
 {
-    [Serializable]
-    public class GraphicColorTween : ColorTweener<Graphic>
+    class SpriteRendererColorTween : ColorTweener<SpriteRenderer>
     {
-        public GraphicColorTween() { }
-        public GraphicColorTween(Graphic element, Color target, float time,
+        public SpriteRendererColorTween() { }
+
+        public SpriteRendererColorTween(SpriteRenderer element, Color target, float time,
             float delay, Func<double, double> easing, Action callback)
             : base(element, target, time, delay, easing, callback) { }
 

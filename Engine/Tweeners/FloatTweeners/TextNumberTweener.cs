@@ -27,17 +27,17 @@ namespace Tween.Source.Tweeners.FloatTweeners
         protected string ToText(float value, int precision)
             => Math.Round(value, precision).ToString();
 
-        protected override void OnFinish()
-            => Element.text = ToText(Target, 2);
-
         protected override void OnMove(float current)
             => Element.text = ToText(current, 2);
     }
 
     public class TextIntegerTweener : TextFloatTweener
     {
-        protected override void OnFinish()
-            => Element.text = ToText(Target, 0);
+        public TextIntegerTweener() { }
+
+        public TextIntegerTweener(Text e, float target, float time,
+            float delay, Func<double, double> easing, Action callback)
+            : base(e, target, time, delay, easing, callback) { }
 
         protected override void OnMove(float current)
             => Element.text = ToText(current, 0);

@@ -11,6 +11,15 @@ namespace IgnitedBox.Tweening.Tweeners.ColorTweeners
             float delay, Func<double, double> easing, Action callback)
             : base(element, target, time, delay, easing, callback) { }
 
+        public override void Blend(TweenData<T, Color> with)
+            => Target *= with.Target;
+
+        public override Color GetTweenAt(float percent)
+            => Start + (Tween * percent);
+
+        protected override Color GetTween()
+            => Target - Start;
+
 #if UNITY_EDITOR
         public override void EditorValueFields()
         {
