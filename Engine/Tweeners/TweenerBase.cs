@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace IgnitedBox.Tweening.Tweeners
@@ -80,7 +81,8 @@ namespace IgnitedBox.Tweening.Tweeners
             => UnityEditor.EditorGUILayout.LabelField("Values Fields not implemented!");
 #endif
 
-        public abstract void Update(float time);
+        public abstract void UpdateFrame(float time);
+        public abstract IEnumerator Coroutine();
 
         protected bool ContinueDelay(float time)
         {
@@ -90,6 +92,15 @@ namespace IgnitedBox.Tweening.Tweeners
             if (currentDelay <= 0) return true;
             currentDelay -= time;
             return currentDelay <= 0;
+        }
+
+        protected IEnumerator WaitDelay()
+        {
+            if (State == TweenState.Playing || Delay > 0 && currentDelay > 0)
+            {
+                yield return new WaitForSeconds(currentDelay);
+                currentDelay = 0;
+            }
         }
 
         protected bool Check(float time, out float percent)

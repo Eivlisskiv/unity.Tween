@@ -10,7 +10,7 @@ namespace IgnitedBox.Tweening.Components.Transforms
         protected override void OnUpdate()
         {
             base.OnUpdate();
-            if (size != null && size.Element) size.Update(Time.deltaTime);
+            if (size != null && size.Element) size.UpdateFrame(Time.deltaTime);
         }
     }
 }

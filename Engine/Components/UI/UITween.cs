@@ -11,7 +11,7 @@ namespace IgnitedBox.Tweening.Components.UI
         protected override void OnUpdate()
         {
             base.OnUpdate();
-            if (color != null && color.Element) color.Update(Time.deltaTime);
+            if (color != null && color.Element) color.UpdateFrame(Time.deltaTime);
         }
     }
 }

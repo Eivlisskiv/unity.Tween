@@ -1,5 +1,6 @@
 ﻿using IgnitedBox.Tweening.Components;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace IgnitedBox.Tweening.Tweeners
@@ -62,7 +63,7 @@ namespace IgnitedBox.Tweening.Tweeners
         protected abstract TTween GetTween();
         protected abstract void OnMove(TTween current);
 
-        public override void Update(float time)
+        public override void UpdateFrame(float time)
         {
             if (Element == null) return;
 
@@ -82,6 +83,32 @@ namespace IgnitedBox.Tweening.Tweeners
 
             OnMove(GetTweenAt(percent));
             return;
+        }
+
+        public override IEnumerator Coroutine()
+        {
+            while (State != TweenState.Finished) 
+            {
+                if (Element == null) yield break;
+
+                WaitDelay();
+
+                float time = scaledTime ? UnityEngine.Time.deltaTime : UnityEngine.Time.unscaledDeltaTime;
+                if (Check(time, out float percent))
+                {
+                    OnMove(GetTweenAt(PerformEasing(1)));
+
+                    Callback?.Invoke();
+                    callbackEvent?.Invoke();
+
+                    if (DoLoop()) yield return null;
+                    State = TweenState.Finished;
+                    yield break;
+                }
+
+                OnMove(GetTweenAt(percent));
+                yield return null; 
+            }
         }
 
         public void SetPositions(TTween start, TTween target)
